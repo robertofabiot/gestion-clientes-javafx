@@ -31,6 +31,7 @@ public class PrincipalController {
     @FXML private TableColumn<Cliente, String> correoCol;
 
     @FXML private ComboBox<Cliente> clienteCombo;
+    @FXML private ComboBox<Cliente> filtroCombo;
     @FXML private TableView<Pedido> pedidosTabla;
     @FXML private TableColumn<Pedido, Long> idPedidoCol;
     @FXML private TableColumn<Pedido, String> pedidoClienteCol;
@@ -140,6 +141,27 @@ public class PrincipalController {
     }
 
     @FXML
+    private void filtrarPedidos() {
+        ejecutar(() -> {
+            Cliente filtro = filtroCombo.getValue();
+            if (filtro == null) {
+                pedidosTabla.getItems().setAll(pedidos.listar());
+                return;
+            }
+            var lista = pedidos.listarPorCliente(filtro.getId());
+            pedidosTabla.getItems().setAll(lista);
+            mensaje(lista.isEmpty() ? "Sin resultados: " + filtro.getNombre() + " no tiene pedidos" : lista.size() + " pedido(s) de " + filtro.getNombre());
+        });
+    }
+
+    @FXML
+    private void quitarFiltro() {
+        filtroCombo.setValue(null);
+        ejecutar(this::refrescar);
+        mensaje("Mostrando todos los pedidos");
+    }
+
+    @FXML
     private void limpiarFormulario() {
         limpiar();
         mensaje("Formulario limpio");
@@ -150,10 +172,15 @@ public class PrincipalController {
         List<Cliente> lista = clientes.listar();
         clientesTabla.getItems().setAll(lista);
         clienteCombo.getItems().setAll(lista);
+        filtroCombo.getItems().setAll(lista);
         if (actual != null) {
             lista.stream().filter(c -> c.getId().equals(actual)).findFirst().ifPresent(clienteCombo::setValue);
         }
-        pedidosTabla.getItems().setAll(pedidos.listar());
+        if (filtroCombo.getValue() == null) {
+            pedidosTabla.getItems().setAll(pedidos.listar());
+        } else {
+            pedidosTabla.getItems().setAll(pedidos.listarPorCliente(filtroCombo.getValue().getId()));
+        }
     }
 
     private void limpiar() {

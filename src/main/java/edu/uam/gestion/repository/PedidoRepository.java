@@ -11,6 +11,13 @@ public class PedidoRepository {
         session.persist(pedido);
     }
 
+    public List<Pedido> listarPorCliente(Session session, Long clienteId) {
+        return session.createQuery(
+                "select p from Pedido p join fetch p.cliente where p.cliente.id = :clienteId order by p.fecha desc, p.id desc",
+                Pedido.class
+        ).setParameter("clienteId", clienteId).list();
+    }
+
     public List<Pedido> listarConCliente(Session session) {
         return session.createQuery(
                 "select p from Pedido p join fetch p.cliente order by p.fecha desc, p.id desc",

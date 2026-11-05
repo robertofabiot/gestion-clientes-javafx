@@ -20,6 +20,15 @@ public class PedidoService {
         }
     }
 
+    public List<Pedido> listarPorCliente(Long clienteId) {
+        if (clienteId == null) {
+            throw new IllegalArgumentException("Seleccione un cliente");
+        }
+        try (var session = HibernateUtil.factory().openSession()) {
+            return pedidos.listarPorCliente(session, clienteId);
+        }
+    }
+
     public void crear(Long clienteId, String descripcion, String monto) {
         if (clienteId == null) {
             throw new IllegalArgumentException("Seleccione un cliente");

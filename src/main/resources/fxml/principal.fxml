@@ -43,6 +43,11 @@
                             <TextField fx:id="montoField" promptText="Monto 0.00" prefWidth="130"/>
                             <Button text="Registrar pedido" onAction="#crearPedido"/>
                         </HBox>
+                        <HBox spacing="10">
+                            <ComboBox fx:id="filtroCombo" promptText="Filtrar por cliente" prefWidth="230"/>
+                            <Button text="Filtrar" onAction="#filtrarPedidos"/>
+                            <Button text="Ver todos" onAction="#quitarFiltro"/>
+                        </HBox>
                         <TableView fx:id="pedidosTabla" VBox.vgrow="ALWAYS">
                             <columns>
                                 <TableColumn fx:id="idPedidoCol" text="ID" prefWidth="60"/>
